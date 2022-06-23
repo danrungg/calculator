@@ -3,12 +3,12 @@ let previousOperand = "";
 let operationNew = undefined;
 
 const numberButtons = document.querySelectorAll("[data-number]");
-const operationButtons = document.querySelectorAll("[data-operation]");
 const equalsButton = document.querySelector("[data-equals]");
 const deleteButton = document.querySelector("[data-delete]");
 const allClearButton = document.querySelector("[data-all-clear]");
-const previousOperandTextElement = document.querySelector("[data-previous]");
-const currentOperandTextElement = document.querySelector("[data-current]");
+const operationButtons = document.querySelectorAll("[data-operation]");
+const previousOperandText = document.querySelector("[data-previous]");
+const currentOperandText = document.querySelector("[data-current]");
 
 // functions
 const clear = () => {
@@ -21,7 +21,7 @@ const deleteChar = () => {
     currentOperand = currentOperand.toString().slice(0, -1);
 };
 
-const appendNumber = (number) => {
+const addChar = (number) => {
     if (number === "." && currentOperand.includes(".")) return;
     currentOperand = currentOperand.toString() + number.toString();
 };
@@ -29,14 +29,14 @@ const appendNumber = (number) => {
 const chooseOperation = (operation) => {
     if (currentOperand === "") return;
     if (previousOperand !== "") {
-        compute();
+        operate();
     }
     operationNew = operation;
     previousOperand = currentOperand;
     currentOperand = "";
 };
 
-const compute = () => {
+const operate = () => {
     let computation;
     const prev = parseFloat(previousOperand);
     const current = parseFloat(currentOperand);
@@ -63,18 +63,19 @@ const compute = () => {
 };
 
 const updateDisplay = () => {
-    currentOperandTextElement.textContent = currentOperand;
+    currentOperandText.textContent = currentOperand;
 
     if (operationNew != null) {
-        previousOperandTextElement.textContent = `${previousOperand} ${operationNew}`;
+        previousOperandText.textContent = `${previousOperand} ${operationNew}`;
     } else {
-        previousOperandTextElement.textContent = "";
+        previousOperandText.textContent = "";
     }
 };
 
+// eventlistener
 numberButtons.forEach((button) => {
     button.addEventListener("click", () => {
-        appendNumber(button.textContent);
+        addChar(button.textContent);
         updateDisplay();
     });
 });
@@ -87,7 +88,7 @@ operationButtons.forEach((button) => {
 });
 
 equalsButton.addEventListener("click", (button) => {
-    compute();
+    operate();
     updateDisplay();
 });
 
